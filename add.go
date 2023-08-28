@@ -65,7 +65,7 @@ func makeAddOptions[T any](opts ...addOption[T]) addOptions[T] {
 	return ao
 }
 
-func add[T any](c *сontainer, ao addOptions[T]) error {
+func add[T any](c *container, ao addOptions[T]) error {
 	var (
 		t    T
 		err  error
@@ -91,12 +91,12 @@ func add[T any](c *сontainer, ao addOptions[T]) error {
 		return ErrBothInit
 	}
 
-	c.initFns = append(c.initFns, func(*сontainer) error { return initFn[T](c, rt, ao, call) })
+	c.initFns = append(c.initFns, func(*container) error { return initFn[T](c, rt, ao, call) })
 
 	return nil
 }
 
-func initFn[T any](c *сontainer, typ reflect.Type, ao addOptions[T], addCall *caller) error {
+func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall *caller) error {
 	if comps, ok := c.components[typ]; ok {
 		if err := checkAdd(comps, ao.id); err != nil {
 			return err

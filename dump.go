@@ -25,7 +25,7 @@ type dump struct {
 
 type withDump struct{ d *dump }
 
-func (w withDump) applyGlobalContainerOption(c *сontainer) {
+func (w withDump) applyGlobalContainerOption(c *container) {
 	c.dump = w.d
 }
 
@@ -107,7 +107,7 @@ type stageJSON struct {
 	Parallel bool   `json:"parallel"`
 }
 
-func dumpComponent(c *сontainer, comp *component) {
+func dumpComponent(c *container, comp *component) {
 	if c.dump == nil {
 		return
 	}
@@ -145,7 +145,7 @@ func dumpComponent(c *сontainer, comp *component) {
 	c.dump.initCount += 1
 }
 
-func dumpStageImpl(c *сontainer, stg *stage, comp *component) {
+func dumpStageImpl(c *container, stg *stage, comp *component) {
 	if c.dump == nil {
 		return
 	}
@@ -159,7 +159,7 @@ func dumpStageImpl(c *сontainer, stg *stage, comp *component) {
 	})
 }
 
-func dumpFile(c *сontainer, path string) {
+func dumpFile(c *container, path string) {
 	if c.dump == nil {
 		return
 	}
@@ -177,7 +177,7 @@ func dumpFile(c *сontainer, path string) {
 	c.dump.data.Files[path] = strings.Split(string(bb), "\n")
 }
 
-func writeDump(c *сontainer) {
+func writeDump(c *container) {
 	if c.dump == nil {
 		return
 	}
@@ -226,7 +226,7 @@ func writeDump(c *сontainer) {
 
 const dumpTmpl = `var data = {{ . }}`
 
-func findStartEnd(c *сontainer, file string, line int) (int, int) {
+func findStartEnd(c *container, file string, line int) (int, int) {
 	firstLine := line - 1
 	fileLines, ok := c.dump.data.Files[file]
 	if !ok {

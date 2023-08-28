@@ -34,7 +34,7 @@ func Get[T any](opts ...getOpt) T {
 
 // get
 // errors: ErrNotFound
-func get[T any](c *сontainer, opts getOpts) (t T, err error) {
+func get[T any](c *container, opts getOpts) (t T, err error) {
 	lookFor := reflect.TypeOf(&t).Elem()
 	if err = checkGetType(lookFor); err != nil {
 		return t, err
