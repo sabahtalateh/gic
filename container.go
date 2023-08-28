@@ -13,7 +13,7 @@ type component struct {
 	c      any
 }
 
-// Container keeps components in form of
+// сontainer keeps components in form of
 //
 //	{
 //	   Type1: {
@@ -22,13 +22,13 @@ type component struct {
 //	   }
 //	   Type2: {..}
 //	}
-type Container struct {
+type сontainer struct {
 	mu          sync.Mutex
 	initialized bool
 
 	logger *zap.SugaredLogger
 
-	initFns  []func(*Container) error             // keeps init functions
+	initFns  []func(*сontainer) error             // keeps init functions
 	stages   map[id]stage                         // keeps registered stages
 	stageFns map[id][]func(context.Context) error // keeps stages function grouped by stage id
 
@@ -38,7 +38,7 @@ type Container struct {
 }
 
 type GlobalContainerOption interface {
-	applyGlobalContainerOption(*Container)
+	applyGlobalContainerOption(*сontainer)
 }
 
 func ConfigureGlobalContainer(opts ...GlobalContainerOption) error {
@@ -55,7 +55,7 @@ func ConfigureGlobalContainer(opts ...GlobalContainerOption) error {
 	return nil
 }
 
-var globC = &Container{
+var globC = &сontainer{
 	stages:     map[id]stage{},
 	stageFns:   map[id][]func(context.Context) error{},
 	components: map[reflect.Type]map[id]*component{},

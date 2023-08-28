@@ -108,7 +108,7 @@ func RunStage(ctx context.Context, s stage) error {
 	return runInParallel(ctx, globC, s)
 }
 
-func runInOrder(ctx context.Context, c *Container, s stage) error {
+func runInOrder(ctx context.Context, c *сontainer, s stage) error {
 	fns := c.stageFns[s.id]
 	if s.order != ReverseInitOrder {
 		for i := 0; i < len(fns); i++ {
@@ -127,7 +127,7 @@ func runInOrder(ctx context.Context, c *Container, s stage) error {
 	return nil
 }
 
-func runInParallel(ctx context.Context, c *Container, s stage) error {
+func runInParallel(ctx context.Context, c *сontainer, s stage) error {
 	fns := c.stageFns[s.id]
 	eg, egCtx := errgroup.WithContext(ctx)
 
