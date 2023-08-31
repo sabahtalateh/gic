@@ -33,7 +33,7 @@ func Run() []string {
 		panic(err)
 	}
 
-	m, err := gic.GetE[*service.Mailing](gic.WithID(service.MailingID))
+	m, err := gic.GetE[service.Mailing](gic.WithID(service.MailingID))
 	if err != nil {
 		panic(err)
 	}

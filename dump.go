@@ -202,14 +202,24 @@ func writeDump(c *container) {
 		})
 	}
 
-	if err := writeResources(c); err != nil {
+	d, err := json.Marshal(c.dump.data)
+	if err != nil {
+		c.LogWarnf("error marshaling dump: %s", err)
+		return
+	}
+
+	if err = os.MkdirAll(c.dump.dir, os.ModePerm); err != nil {
 		c.LogWarnf("%s", err)
 		return
 	}
 
-	d, err := json.Marshal(c.dump.data)
-	if err != nil {
-		c.LogWarnf("error marshaling dump: %s", err)
+	if err = os.WriteFile(filepath.Join(c.dump.dir, "dump.json"), d, os.ModePerm); err != nil {
+		c.LogWarnf("%s", err)
+		return
+	}
+
+	if err = writeResources(c); err != nil {
+		c.LogWarnf("%s", err)
 		return
 	}
 

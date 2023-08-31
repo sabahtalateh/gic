@@ -37,10 +37,10 @@ func (m *Mailing) Send() []string {
 var MailingID = gic.ID("Mailing")
 
 func init() {
-	gic.Add[*Mailing](
+	gic.Add[Mailing](
 		gic.WithID(MailingID),
-		gic.WithInit(func() *Mailing {
-			return &Mailing{
+		gic.WithInit(func() Mailing {
+			return Mailing{
 				userRepo1: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo1)),
 				userRepo2: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo2)),
 				allRepos: gic.List[Repo](
