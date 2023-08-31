@@ -189,11 +189,11 @@ func writeDump(c *container) {
 		order := ""
 		switch s.order {
 		case NoOrder:
-			order = "(No Order)"
+			order = ""
 		case InitOrder:
-			order = "Init Order (same as components initialization)"
+			order = "InitOrder"
 		case ReverseInitOrder:
-			order = "Reverse Init Order (in reverse to components initialization)"
+			order = "ReverseInitOrder"
 		}
 
 		c.dump.data.Stages = append(c.dump.data.Stages, &stageJSON{

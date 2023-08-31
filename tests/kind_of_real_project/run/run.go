@@ -18,10 +18,10 @@ func Run() []string {
 		gic.WithZapSugaredLogger(sugar),
 		gic.WithDump(
 			gic.WithDumpDir(dump),
-			gic.WithOverrideRoot(
-				"/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project",
-				"/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project2",
-			),
+			// gic.WithOverrideRoot(
+			// 	"/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project",
+			// 	"/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project2",
+			// ),
 		),
 	)
 

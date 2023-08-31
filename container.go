@@ -61,8 +61,8 @@ var globC = &container{
 	components: map[reflect.Type]map[id]*component{},
 }
 
-var start = RegisterStage(WithID("start"))
-var stop = RegisterStage(WithID("stop"))
+var start = RegisterStage(WithID("Start"))
+var stop = RegisterStage(WithID("Stop"))
 
 // WithStart adds component start function
 // Added function will be executed on Start call
