@@ -1,11 +1,10 @@
 package gic
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
-	"html/template"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"sync"
@@ -203,8 +202,7 @@ func writeDump(c *container) {
 		})
 	}
 
-	t, err := template.New("").Parse(dumpTmpl)
-	if err != nil {
+	if err := writeResources(c); err != nil {
 		c.LogWarnf("%s", err)
 		return
 	}
@@ -215,16 +213,27 @@ func writeDump(c *container) {
 		return
 	}
 
-	bb := new(bytes.Buffer)
-	if err = t.Execute(bb, template.JS(d)); err != nil {
+	jsData := "var data = " + string(d)
+	if err = os.WriteFile(filepath.Join(c.dump.dir, "data.js"), []byte(jsData), os.ModePerm); err != nil {
 		c.LogWarnf("%s", err)
 		return
 	}
-
-	println(bb)
 }
 
-const dumpTmpl = `var data = {{ . }}`
+func writeResources(c *container) error {
+	for _, resource := range dumpResources {
+		resource.file = filepath.Join(c.dump.dir, resource.file)
+		if err := os.MkdirAll(filepath.Dir(resource.file), os.ModePerm); err != nil {
+			return err
+		}
+
+		if err := os.WriteFile(resource.file, []byte(resource.content), os.ModePerm); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
 
 func findStartEnd(c *container, file string, line int) (int, int) {
 	firstLine := line - 1

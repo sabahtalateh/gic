@@ -7,7 +7,7 @@ import (
 	"go.uber.org/zap"
 )
 
-const dump = "/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project"
+const dump = "/Users/kravtsov777/Code/go/src/github.com/sabahtalateh/gic/tests/kind_of_real_project/dump"
 
 func Run() []string {
 	logger, _ := zap.NewProduction()
