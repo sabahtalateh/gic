@@ -123,7 +123,7 @@ func dumpComponent(c *container, comp *component) {
 	}
 
 	var file string
-	if comp.caller != nil {
+	if comp.caller.found {
 		file = strings.TrimPrefix(comp.caller.file, c.dump.overrideRoot.root)
 		file = fmt.Sprintf("%s%s", c.dump.overrideRoot.override, file)
 

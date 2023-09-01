@@ -20,10 +20,7 @@ func (u *UserRepo) Select(id int) string {
 	}
 }
 
-var Repo1, Repo2, Repo3 = gic.ID("UserRepo1"), gic.ID("UserRepo2"), gic.ID("UserRepo3")
-
-// var UserRepo1ID = ic.id()
-// var UserRepo2ID = ic.id()
+var Repo1, Repo2 = gic.ID("UserRepo1"), gic.ID("UserRepo2")
 
 func init() {
 	gic.Add[*UserRepo](
@@ -33,11 +30,6 @@ func init() {
 
 	gic.Add[*UserRepo](
 		gic.WithID(Repo2),
-		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.Get[*system.DB]()} }),
-	)
-
-	gic.Add[*UserRepo](
-		gic.WithID(Repo3),
 		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.Get[*system.DB]()} }),
 	)
 }

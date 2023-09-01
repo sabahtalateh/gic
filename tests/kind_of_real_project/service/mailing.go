@@ -13,8 +13,6 @@ type Repo interface {
 type Mailing struct {
 	userRepo1 Repo
 	userRepo2 Repo
-
-	allRepos []Repo
 }
 
 func (m *Mailing) Send() []string {
@@ -43,10 +41,6 @@ func init() {
 			return Mailing{
 				userRepo1: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo1)),
 				userRepo2: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo2)),
-				allRepos: gic.List[Repo](
-					gic.Get[*repo.UserRepo](gic.WithID(repo.Repo3)),
-					gic.Get[*repo.UserRepo](gic.WithID(repo.Repo2)),
-				),
 			}
 		}),
 	)

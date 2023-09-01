@@ -9,7 +9,7 @@ import (
 
 type component struct {
 	id     id
-	caller *caller
+	caller caller
 	c      any
 }
 

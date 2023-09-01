@@ -26,6 +26,6 @@ var (
 	ErrStageNotRegistered = fmt.Errorf("stage not registered")
 )
 
-func errIDInUse(id id, where *caller, c *caller) error {
-	return errors.Join(ErrIDInUse, fmt.Errorf("component id %d in use\n%s\n%s", id, where, c))
+func errIDInUse(id id, where caller, c caller) error {
+	return errors.Join(ErrIDInUse, fmt.Errorf("component id %s in use\n%s\n%s", id, where, c))
 }

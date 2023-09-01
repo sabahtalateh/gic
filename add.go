@@ -19,20 +19,45 @@ type addOptions[T any] struct {
 	stageImps map[id]func(context.Context, T) error
 }
 
-type addOption[T any] interface{ addOption() }
+type addOption[T any] interface {
+	addOption()
+	addOptionCallInfo() string
+}
 
-type withInitE[T any] struct{ f func() (T, error) }
-type withInit[T any] struct{ f func() T }
-type withStageImpl[T any] struct{ stageImpl[T] }
+type withInitE[T any] struct {
+	f func() (T, error)
+	c caller
+}
+type withInit[T any] struct {
+	f func() T
+	c caller
+}
+type withStageImpl[T any] struct {
+	impl stageImpl[T]
+	c    caller
+}
 
 func (w withInitE[T]) addOption()     {}
 func (w withInit[T]) addOption()      {}
 func (w withStageImpl[T]) addOption() {}
 
-func WithInitE[T any](f func() (T, error)) withInitE[T] { return withInitE[T]{f: f} }
-func WithInit[T any](f func() T) withInit[T]            { return withInit[T]{f: f} }
+func (w withInitE[T]) addOptionCallInfo() string {
+	var t T
+	return fmt.Sprintf("gic.WithInitE[%s]\n%s", reflect.TypeOf(t), w.c)
+}
+func (w withInit[T]) addOptionCallInfo() string {
+	var t T
+	return fmt.Sprintf("gic.WithInit[%s]\n%s", reflect.TypeOf(t), w.c)
+}
+func (w withStageImpl[T]) addOptionCallInfo() string {
+	var t T
+	return fmt.Sprintf("gic.WithStageImpl[%s]\n%s", reflect.TypeOf(t), w.c)
+}
+
+func WithInitE[T any](f func() (T, error)) withInitE[T] { return withInitE[T]{f: f, c: makeCaller()} }
+func WithInit[T any](f func() T) withInit[T]            { return withInit[T]{f: f, c: makeCaller()} }
 func WithStageImpl[T any](s stage, onStage func(context.Context, T) error) withStageImpl[T] {
-	return withStageImpl[T]{stageImpl[T]{s: s, onStage: onStage}}
+	return withStageImpl[T]{impl: stageImpl[T]{s: s, onStage: onStage}, c: makeCaller()}
 }
 
 // Add adds component init function into container
@@ -56,9 +81,13 @@ func makeAddOptions[T any](opts ...addOption[T]) addOptions[T] {
 		case withInitE[T]:
 			ao.initE = o.f
 		case withStageImpl[T]:
-			ao.stageImps[o.s.id] = o.onStage
+			ao.stageImps[o.impl.s.id] = o.impl.onStage
 		default:
-			panic("unsupported option")
+			var t T
+			panic(fmt.Sprintf(
+				"inconsistent type parameters on gic.Add[%s] and on %s",
+				reflect.TypeOf(t), opt.addOptionCallInfo(),
+			))
 		}
 	}
 
@@ -72,8 +101,10 @@ func add[T any](c *container, ao addOptions[T]) error {
 		call = makeCaller()
 	)
 
-	if err = checkCallFromInit(call); err != nil {
-		return err
+	if call.found {
+		if err = checkCallFromInit(call); err != nil {
+			return err
+		}
 	}
 
 	// common approach to get type of interfaces
@@ -96,7 +127,7 @@ func add[T any](c *container, ao addOptions[T]) error {
 	return nil
 }
 
-func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall *caller) error {
+func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall caller) error {
 	if comps, ok := c.components[typ]; ok {
 		if err := checkAdd(comps, ao.id); err != nil {
 			return err

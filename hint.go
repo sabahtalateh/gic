@@ -14,7 +14,7 @@ func hasElem(t reflect.Type) bool {
 	}, t.Kind())
 }
 
-func hint(comps map[reflect.Type]map[id]*component, lookFor reflect.Type, c *caller) error {
+func hint(comps map[reflect.Type]map[id]*component, lookFor reflect.Type, c caller) error {
 	for typ := range comps {
 		if hasElem(typ) {
 			if typ.Elem().AssignableTo(lookFor) {

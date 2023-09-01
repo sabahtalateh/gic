@@ -9,12 +9,16 @@ import (
 )
 
 type caller struct {
+	found    bool
 	funcName string
 	file     string
 	line     int
 }
 
-func (c *caller) String() string {
+func (c caller) String() string {
+	if !c.found {
+		return "[caller not found]"
+	}
 	return fmt.Sprintf("%s\n\t%s:%d", c.funcName, c.file, c.line)
 }
 
@@ -23,7 +27,7 @@ var skipCallers = []string{
 	"runtime",
 }
 
-func checkCallFromInit(c *caller) error {
+func checkCallFromInit(c caller) error {
 	skip := 1
 
 	for {
@@ -52,7 +56,7 @@ func checkCallFromInit(c *caller) error {
 }
 
 // returns first call made outside github.com/sabahtalateh/gic
-func makeCaller() *caller {
+func makeCaller() caller {
 	// skip self
 	skip := 1
 
@@ -71,8 +75,8 @@ FOR:
 			}
 		}
 
-		return &caller{funcName: fName, file: file, line: line}
+		return caller{found: true, funcName: fName, file: file, line: line}
 	}
 
-	return nil
+	return caller{found: false}
 }
