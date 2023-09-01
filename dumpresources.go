@@ -28,7 +28,7 @@ var dumpResources = []dumpResource{
 
 	{
 		file:    "index.html",
-		content: `<!doctype html><html lang="en"><head><script src="./data.js"></script><meta charset="utf-8"/><title>React App</title><script defer="defer" src="./static/js/main.3918864b.js"></script><link href="./static/css/main.c54663d4.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>`,
+		content: `<!doctype html><html lang="en"><head><script src="./data.js"></script><meta charset="utf-8"/><title>Global Init Container dump</title><script defer="defer" src="./static/js/main.3918864b.js"></script><link href="./static/css/main.c54663d4.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>`,
 	},
 
 	{
