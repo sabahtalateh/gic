@@ -60,11 +60,11 @@ func RegisterStageE(opts ...stageOption) (stage, error) {
 		opt.applyStageOption(&s)
 	}
 
-	if s.id == "" {
+	if s.id.v == "" {
 		return s, ErrEmptyStageName
 	}
 
-	if _, ok := globC.stages[s.id]; ok {
+	if _, ok := globC.stages[s.id.v]; ok {
 		return s, errors.Join(ErrStageRegistered, fmt.Errorf("%s", s.id))
 	}
 
@@ -72,7 +72,7 @@ func RegisterStageE(opts ...stageOption) (stage, error) {
 		globC.LogWarnf("order will not take effect without gic.WithDisableParallel")
 	}
 
-	globC.stages[s.id] = s
+	globC.stages[s.id.v] = s
 
 	globC.LogInfof("stage %s registered", s.id)
 
@@ -96,7 +96,7 @@ func RunStage(ctx context.Context, s stage) error {
 	}
 	globC.mu.Unlock()
 
-	stg, ok := globC.stages[s.id]
+	stg, ok := globC.stages[s.id.v]
 	if !ok {
 		return errors.Join(ErrStageNotRegistered, fmt.Errorf("%s", s.id))
 	}
@@ -109,7 +109,7 @@ func RunStage(ctx context.Context, s stage) error {
 }
 
 func runInOrder(ctx context.Context, c *container, s stage) error {
-	fns := c.stageFns[s.id]
+	fns := c.stageFns[s.id.v]
 	if s.order != ReverseInitOrder {
 		for i := 0; i < len(fns); i++ {
 			if err := fns[i](ctx); err != nil {
@@ -128,7 +128,7 @@ func runInOrder(ctx context.Context, c *container, s stage) error {
 }
 
 func runInParallel(ctx context.Context, c *container, s stage) error {
-	fns := c.stageFns[s.id]
+	fns := c.stageFns[s.id.v]
 	eg, egCtx := errgroup.WithContext(ctx)
 
 	for i := 0; i < len(fns); i++ {

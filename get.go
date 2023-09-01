@@ -69,8 +69,8 @@ func get[T any](c *container, opts getOpts) (t T, err error) {
 	return t, errors.Join(ErrNotFound, fmt.Errorf("%s[id=%s] not found %s", lookFor, opts.id, makeCaller()))
 }
 
-func compByID(comps map[id]*component, t reflect.Type, id id) (*component, error) {
-	comp, ok := comps[id]
+func compByID(comps map[string]*component, t reflect.Type, id id) (*component, error) {
+	comp, ok := comps[id.v]
 	if !ok {
 		var (
 			foundMsg string
@@ -84,7 +84,7 @@ func compByID(comps map[id]*component, t reflect.Type, id id) (*component, error
 	return comp, nil
 }
 
-func compsForErr(comps map[id]*component, t reflect.Type) []string {
+func compsForErr(comps map[string]*component, t reflect.Type) []string {
 	// sort keys by caller
 	keys := maps.Keys(comps)
 	sort.Slice(keys, func(i, j int) bool { return comps[keys[i]].caller.String() < comps[keys[j]].caller.String() })

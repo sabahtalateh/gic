@@ -2,7 +2,7 @@ package gic
 
 import "fmt"
 
-type id string
+type id struct{ v string }
 
 type withID struct {
 	id id
@@ -20,5 +20,5 @@ func WithID(id id) withID {
 
 // ID creates identifier
 func ID(value string) id {
-	return id(value)
+	return id{v: value}
 }

@@ -6,30 +6,26 @@ import (
 	"testing"
 )
 
-type Component struct{}
+type Component struct {
+	prop string
+}
 
 var SomeComponent = gic.ID("SomeComponent")
 
 func init() {
 	gic.Add[*Component](
 		gic.WithID(SomeComponent),
-		gic.WithInit(func() []Component {
-			return nil
-			// return Component{}
+		gic.WithInit(func() *Component {
+			return &Component{prop: "value"}
 		}),
 	)
 }
 
-func TestComponentFound(t *testing.T) {
+func TestComponentFoundByID(t *testing.T) {
 	_ = gic.Init()
 
 	comp, err := gic.GetE[*Component](gic.WithID(SomeComponent))
 	require.NoError(t, err)
 	require.NotNil(t, comp)
-}
-
-func TestComponentNotFound(t *testing.T) {
-	// comp, err := gic.GetE[*Component](NonExisting)
-	// require.ErrorIs(t, err, gic.ErrNotFound)
-	// require.Nil(t, comp)
+	require.Equal(t, comp.prop, "value")
 }

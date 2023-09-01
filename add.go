@@ -133,7 +133,7 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 			return err
 		}
 	} else {
-		c.components[typ] = map[id]*component{}
+		c.components[typ] = map[string]*component{}
 	}
 
 	var (
@@ -158,9 +158,9 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 	}
 
 	comp := &component{id: ao.id, caller: addCall, c: t}
-	c.components[typ][ao.id] = comp
+	c.components[typ][ao.id.v] = comp
 
-	logID := ao.id
+	logID := ao.id.v
 	if logID == "" {
 		logID = "(No ID)"
 	}
@@ -170,11 +170,11 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 
 	for stgID, f := range ao.stageImps {
 		f := f
-		stg, ok := c.stages[stgID]
+		stg, ok := c.stages[stgID.v]
 		if !ok {
 			return errors.Join(ErrStageNotRegistered, fmt.Errorf("%s", stgID))
 		}
-		c.stageFns[stgID] = append(c.stageFns[stgID], func(ctx context.Context) error { return f(ctx, t) })
+		c.stageFns[stgID.v] = append(c.stageFns[stgID.v], func(ctx context.Context) error { return f(ctx, t) })
 		c.LogInfof("%s[id=%s] implementing stage: %s", typ, logID, stgID)
 
 		dumpStageImpl(c, &stg, comp)
@@ -183,9 +183,9 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 	return nil
 }
 
-func checkAdd(comps map[id]*component, id id) error {
+func checkAdd(comps map[string]*component, id id) error {
 	// FORBIDDEN to have same id for different components
-	if comp, ok := comps[id]; ok {
+	if comp, ok := comps[id.v]; ok {
 		return errIDInUse(id, comp.caller, makeCaller())
 	}
 

@@ -28,11 +28,11 @@ type container struct {
 
 	logger *zap.SugaredLogger
 
-	initFns  []func(*container) error             // keeps init functions
-	stages   map[id]stage                         // keeps registered stages
-	stageFns map[id][]func(context.Context) error // keeps stages function grouped by stage id
+	initFns  []func(*container) error                 // keeps init functions
+	stages   map[string]stage                         // keeps registered stages
+	stageFns map[string][]func(context.Context) error // keeps stages function grouped by stage id
 
-	components map[reflect.Type]map[id]*component
+	components map[reflect.Type]map[string]*component
 
 	dump *dump
 }
@@ -56,13 +56,13 @@ func ConfigureGlobalContainer(opts ...GlobalContainerOption) error {
 }
 
 var globC = &container{
-	stages:     map[id]stage{},
-	stageFns:   map[id][]func(context.Context) error{},
-	components: map[reflect.Type]map[id]*component{},
+	stages:     map[string]stage{},
+	stageFns:   map[string][]func(context.Context) error{},
+	components: map[reflect.Type]map[string]*component{},
 }
 
-var start = RegisterStage(WithID("Start"))
-var stop = RegisterStage(WithID("Stop"))
+var start = RegisterStage(WithID(ID("Start")))
+var stop = RegisterStage(WithID(ID("Stop")))
 
 // WithStart adds component start function
 // Added function will be executed on Start call

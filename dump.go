@@ -119,7 +119,7 @@ func dumpComponent(c *container, comp *component) {
 	cJSON := &compJSON{
 		Order: c.dump.initCount,
 		Type:  fmt.Sprintf("%s", rt),
-		ID:    string(comp.id),
+		ID:    comp.id.v,
 	}
 
 	var file string
@@ -136,7 +136,7 @@ func dumpComponent(c *container, comp *component) {
 	for _, d := range c.dump.got {
 		cJSON.DirectDeps = append(
 			cJSON.DirectDeps,
-			&compCoordsJSON{Type: fmt.Sprintf("%s", reflect.TypeOf(d.c)), ID: string(d.id)},
+			&compCoordsJSON{Type: fmt.Sprintf("%s", reflect.TypeOf(d.c)), ID: d.id.v},
 		)
 	}
 
@@ -152,9 +152,9 @@ func dumpStageImpl(c *container, stg *stage, comp *component) {
 	c.dump.mu.Lock()
 	defer c.dump.mu.Unlock()
 
-	c.dump.data.StageImpls[string(stg.id)] = append(c.dump.data.StageImpls[string(stg.id)], &compCoordsJSON{
+	c.dump.data.StageImpls[stg.id.v] = append(c.dump.data.StageImpls[stg.id.v], &compCoordsJSON{
 		Type: fmt.Sprintf("%s", reflect.TypeOf(comp.c)),
-		ID:   string(comp.id),
+		ID:   comp.id.v,
 	})
 }
 
@@ -196,7 +196,7 @@ func writeDump(c *container) {
 		}
 
 		c.dump.data.Stages = append(c.dump.data.Stages, &stageJSON{
-			ID:       string(s.id),
+			ID:       s.id.v,
 			Order:    order,
 			Parallel: !s.disableParallel,
 		})
