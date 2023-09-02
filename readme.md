@@ -126,6 +126,11 @@ func init() {
 ```
 IDs also used to get components
 ```go
+type Service struct {
+	writeDB *DB
+	readDB  *DB
+}
+
 func init() {
 	gic.Add[*Service](
 		gic.WithInit(func() *Service {
