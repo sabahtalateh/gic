@@ -124,7 +124,7 @@ func init() {
 	)
 }
 ```
-IDs also used to get components
+Previously created ids also used to get components
 ```go
 type Service struct {
 	writeDB *DB
