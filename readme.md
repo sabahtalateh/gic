@@ -67,7 +67,24 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+```
+
+### Get
+
+Now we can get our component from container
+
+```go
+package main
+
+import (
+	"log"
 	
+	"github.com/sabahtalateh/gic"
+)
+
+func main() {
+	// ...
 	srv, err := gic.GetE[*SomeService]()
 	if err != nil {
 		log.Fatal(err)
