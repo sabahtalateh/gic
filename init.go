@@ -1,6 +1,6 @@
 package gic
 
-// Init runs all the added (see: Add) components init function
+// Init runs all the added components init function (see: Add)
 func Init() error {
 	globC.mu.Lock()
 	defer globC.mu.Unlock()

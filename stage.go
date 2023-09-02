@@ -11,7 +11,7 @@ type StageRunOrder uint64
 
 const (
 	// NoOrder has same effect as InitOrder
-	// Needs to differ from InitOrder and ReverseInitOrder while stage is running concurrently
+	// Needs to differ from InitOrder and ReverseInitOrder when stage is running concurrently
 	NoOrder StageRunOrder = iota
 	// InitOrder as components was initialized
 	InitOrder
@@ -19,8 +19,8 @@ const (
 	ReverseInitOrder
 )
 
-// stage creates with RegisterStageE and
-// WithName, WithInitOrder, WithReverseInitOrder, WithDisableParallel
+// stage created with RegisterStageE and
+// WithID, WithInitOrder, WithReverseInitOrder, WithDisableParallel
 type stage struct {
 	id              id
 	order           StageRunOrder // order has effect only if disableParallel is true
@@ -37,7 +37,10 @@ func (w withInitOrder) applyStageOption(s *stage)        { s.order = InitOrder }
 func (w withReverseInitOrder) applyStageOption(s *stage) { s.order = ReverseInitOrder }
 func (w withDisableParallel) applyStageOption(s *stage)  { s.disableParallel = true }
 
-func WithInitOrder() withInitOrder               { return withInitOrder{} }
+// WithInitOrder set stage init order to InitOrder
+func WithInitOrder() withInitOrder { return withInitOrder{} }
+
+// WithReverseInitOrder set stage init order to ReverseInitOrder
 func WithReverseInitOrder() withReverseInitOrder { return withReverseInitOrder{} }
 
 // WithDisableParallel
@@ -45,8 +48,8 @@ func WithReverseInitOrder() withReverseInitOrder { return withReverseInitOrder{}
 // If Not passed stage implementations will be executed within goroutines (see: runInParallel)
 func WithDisableParallel() withDisableParallel { return withDisableParallel{} }
 
-// RegisterStageE adds stage to container global variable (see: var globC = ...)
-// No stages can be implemented on component before they registered
+// RegisterStageE add stage to container global variable (see: var globC = ...)
+// No stages can be implemented on component before it registered
 // errors: ErrEmptyStageName, ErrStageRegistered
 func RegisterStageE(opts ...stageOption) (stage, error) {
 	globC.mu.Lock()

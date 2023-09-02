@@ -41,6 +41,7 @@ type GlobalContainerOption interface {
 	applyGlobalContainerOption(*container)
 }
 
+// ConfigureGlobalContainer configures dump (see: WithDump) and logger (see: WithZapSugaredLogger)
 func ConfigureGlobalContainer(opts ...GlobalContainerOption) error {
 	globC.mu.Lock()
 	defer globC.mu.Unlock()
@@ -61,6 +62,7 @@ var globC = &container{
 	components: map[reflect.Type]map[string]*component{},
 }
 
+// container has 2 predefined stages
 var start = RegisterStage(WithID(ID("Start")))
 var stop = RegisterStage(WithID(ID("Stop")))
 

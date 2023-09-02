@@ -10,6 +10,7 @@ func (w withZapSugaredLogger) applyGlobalContainerOption(c *container) {
 	c.logger = w.s
 }
 
+// WithZapSugaredLogger set container zap logger
 func WithZapSugaredLogger(s *zap.SugaredLogger) withZapSugaredLogger {
 	s = s.With("component", "gic")
 	return withZapSugaredLogger{s: s}

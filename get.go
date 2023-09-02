@@ -13,7 +13,7 @@ import (
 type getOpts struct{ id id }
 type getOpt interface{ applyGetOption(*getOpts) }
 
-// GetE
+// GetE return component from container
 // errors: ErrNotFound
 func GetE[T any](opts ...getOpt) (T, error) {
 	oo := getOpts{}
@@ -24,7 +24,7 @@ func GetE[T any](opts ...getOpt) (T, error) {
 	return get[T](globC, oo)
 }
 
-// Get
+// Get return component from container. panics on GetE error
 // errors: ErrNotFound
 func Get[T any](opts ...getOpt) T {
 	t, err := GetE[T](opts...)
@@ -32,7 +32,6 @@ func Get[T any](opts ...getOpt) T {
 	return t
 }
 
-// get
 // errors: ErrNotFound
 func get[T any](c *container, opts getOpts) (t T, err error) {
 	lookFor := reflect.TypeOf(&t).Elem()

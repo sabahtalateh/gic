@@ -54,8 +54,13 @@ func (w withStageImpl[T]) addOptionCallInfo() string {
 	return fmt.Sprintf("gic.WithStageImpl[%s]\n%s", reflect.TypeOf(t), w.c)
 }
 
+// WithInitE set component initialization function which can return error
 func WithInitE[T any](f func() (T, error)) withInitE[T] { return withInitE[T]{f: f, c: makeCaller()} }
-func WithInit[T any](f func() T) withInit[T]            { return withInit[T]{f: f, c: makeCaller()} }
+
+// WithInit set component initialization function
+func WithInit[T any](f func() T) withInit[T] { return withInit[T]{f: f, c: makeCaller()} }
+
+// WithStageImpl set stage implementation function
 func WithStageImpl[T any](s stage, onStage func(context.Context, T) error) withStageImpl[T] {
 	return withStageImpl[T]{impl: stageImpl[T]{s: s, onStage: onStage}, c: makeCaller()}
 }

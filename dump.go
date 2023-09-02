@@ -28,6 +28,14 @@ func (w withDump) applyGlobalContainerOption(c *container) {
 	c.dump = w.d
 }
 
+// WithDump configures dump output directory
+// It will contain:
+// - dump.json with dumped container and stages
+// - index.html with visual dump. it can be opened in browser
+// - *.css and *.js files required by index.html
+// Dump dir content built with https://github.com/sabahtalateh/gicdump > npm run build
+//
+// Dump written on gic.Init
 func WithDump(opts ...dumpOption) withDump {
 	d := &dump{}
 	for _, opt := range opts {
