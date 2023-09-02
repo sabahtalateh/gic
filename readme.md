@@ -92,6 +92,38 @@ func main() {
 	srv.Hello()
 }
 ```
+```shell
+Hello World!
+```
+
+### ID
+
+To create an instance of one struct several times with different parameters `gic.ID` is used
+
+```go
+import (
+	"github.com/sabahtalateh/gic"
+)
+
+type DB struct {
+	dsn string
+}
+
+var Write = gic.ID("WriteDB")
+var Read = gic.ID("ReadDB")
+
+func init() {
+	gic.Add[*DB](
+		gic.WithID(Write),
+		gic.WithInit(func() *DB { return &DB{dsn: "write dsn"} }),
+	)
+
+	gic.Add[*DB](
+		gic.WithID(Read),
+		gic.WithInit(func() *DB { return &DB{dsn: "read dsn"} }),
+	)
+}
+```
 
 ## Stages
 
