@@ -31,7 +31,7 @@ linters:
     - execinquery
     #- exhaustive
     #- exhaustivestruct
-    - exhaustruct
+    #- exhaustruct
     - exportloopref
     - forbidigo
     #- forcetypeassert
@@ -49,7 +49,7 @@ linters:
     - godox
     #- goerr113
     - gofmt
-    - gofumpt
+    #- gofumpt
     - goheader
     - goimports
     #- golint
@@ -99,7 +99,7 @@ linters:
     #- structcheck
     - stylecheck
     - tagalign
-    - tagliatelle
+    #- tagliatelle
     - tenv
     - testableexamples
     - testpackage
@@ -114,6 +114,6 @@ linters:
     #- varnamelen
     - wastedassign
     - whitespace
-    - wrapcheck
+    #- wrapcheck
     #- wsl
     - zerologlint

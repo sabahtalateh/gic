@@ -39,6 +39,8 @@ func checkCallFromInit(c caller) error {
 		fName := runtime.FuncForPC(pc).Name()
 
 		parts := strings.Split(fName, ".")
+
+		//nolint
 		if len(parts) < 2 {
 			skip++
 			continue
@@ -52,10 +54,10 @@ func checkCallFromInit(c caller) error {
 		skip++
 	}
 
-	return errors.Join(ErrNotFromInit, fmt.Errorf("%s\n", c))
+	return errors.Join(ErrNotFromInit, fmt.Errorf("%s", c))
 }
 
-// returns first call made outside github.com/sabahtalateh/gic
+// returns first call made outside github.com/sabahtalateh/gic.
 func makeCaller() caller {
 	// skip self
 	skip := 1

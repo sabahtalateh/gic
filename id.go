@@ -18,7 +18,7 @@ func WithID(id id) withID {
 	return withID{id: id, c: makeCaller()}
 }
 
-// ID creates identifier
+// ID creates identifier.
 func ID(value string) id {
 	return id{v: value}
 }

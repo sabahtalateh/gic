@@ -11,7 +11,7 @@ func check(err error) {
 }
 
 var (
-	// TODO link to doc in errors texts
+	// TODO link to doc in errors texts.
 	ErrInitialized        = fmt.Errorf("container already initialized")
 	ErrNotInitialized     = fmt.Errorf("container not initialized. call gic.Init")
 	ErrNoInit             = fmt.Errorf("no init function. use gic.WithInit or gic.WithInitE")

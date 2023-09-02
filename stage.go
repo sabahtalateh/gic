@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+
 	"golang.org/x/sync/errgroup"
 )
 
@@ -11,16 +12,16 @@ type StageRunOrder uint64
 
 const (
 	// NoOrder has same effect as InitOrder
-	// Needs to differ from InitOrder and ReverseInitOrder when stage is running concurrently
+	// Needs to differ from InitOrder and ReverseInitOrder when stage is running concurrently.
 	NoOrder StageRunOrder = iota
-	// InitOrder as components was initialized
+	// InitOrder as components was initialized.
 	InitOrder
-	// ReverseInitOrder in reverse of init order. what a surprise :-)
+	// ReverseInitOrder in reverse of init order. what a surprise :-).
 	ReverseInitOrder
 )
 
 // stage created with RegisterStageE and
-// WithID, WithInitOrder, WithReverseInitOrder, WithDisableParallel
+// WithID, WithInitOrder, WithReverseInitOrder, WithDisableParallel.
 type stage struct {
 	id              id
 	order           StageRunOrder // order has effect only if disableParallel is true
@@ -37,15 +38,15 @@ func (w withInitOrder) applyStageOption(s *stage)        { s.order = InitOrder }
 func (w withReverseInitOrder) applyStageOption(s *stage) { s.order = ReverseInitOrder }
 func (w withDisableParallel) applyStageOption(s *stage)  { s.disableParallel = true }
 
-// WithInitOrder set stage init order to InitOrder
+// WithInitOrder set stage init order to InitOrder.
 func WithInitOrder() withInitOrder { return withInitOrder{} }
 
-// WithReverseInitOrder set stage init order to ReverseInitOrder
+// WithReverseInitOrder set stage init order to ReverseInitOrder.
 func WithReverseInitOrder() withReverseInitOrder { return withReverseInitOrder{} }
 
 // WithDisableParallel
 // If passed stage implementations will be executed in order (see: runInOrder)
-// If Not passed stage implementations will be executed within goroutines (see: runInParallel)
+// If Not passed stage implementations will be executed within goroutines (see: runInParallel).
 func WithDisableParallel() withDisableParallel { return withDisableParallel{} }
 
 // RegisterStageE add stage to container global variable (see: var globC = ...)
@@ -82,7 +83,7 @@ func RegisterStageE(opts ...stageOption) (stage, error) {
 	return s, nil
 }
 
-// RegisterStage panics on RegisterStageE error
+// RegisterStage panics on RegisterStageE error.
 func RegisterStage(opts ...stageOption) stage {
 	stg, err := RegisterStageE(opts...)
 	check(err)

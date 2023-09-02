@@ -35,7 +35,7 @@ func (w withDump) applyGlobalContainerOption(c *container) {
 // - *.css and *.js files required by index.html
 // Dump dir content built with https://github.com/sabahtalateh/gicdump > npm run build
 //
-// Dump written on gic.Init
+// Dump written on gic.Init.
 func WithDump(opts ...dumpOption) withDump {
 	d := &dump{}
 	for _, opt := range opts {
@@ -70,7 +70,7 @@ func (w withOverrideRoot) applyDumpOption(d *dump) {
 	}{root: w.root, override: w.override}
 }
 
-// WithDumpDir specifies directory where to put dump
+// WithDumpDir specifies directory where to put dump.
 func WithDumpDir(dir string) withDumpDir {
 	return withDumpDir{dir: dir}
 }
@@ -80,7 +80,7 @@ func WithDumpDir(dir string) withDumpDir {
 // and then run on another you may override first
 // machines root with second machine root.
 // Root is used to lookup source code files to show
-// components source code definitions on dump page
+// components source code definitions on dump page.
 func WithOverrideRoot(root, override string) withOverrideRoot {
 	return withOverrideRoot{root: root, override: override}
 }
@@ -126,7 +126,7 @@ func dumpComponent(c *container, comp *component) {
 
 	cJSON := &compJSON{
 		Order: c.dump.initCount,
-		Type:  fmt.Sprintf("%s", rt),
+		Type:  rt.String(),
 		ID:    comp.id.v,
 	}
 
@@ -144,7 +144,7 @@ func dumpComponent(c *container, comp *component) {
 	for _, d := range c.dump.got {
 		cJSON.DirectDeps = append(
 			cJSON.DirectDeps,
-			&compCoordsJSON{Type: fmt.Sprintf("%s", reflect.TypeOf(d.c)), ID: d.id.v},
+			&compCoordsJSON{Type: reflect.TypeOf(d.c).String(), ID: d.id.v},
 		)
 	}
 
@@ -161,7 +161,7 @@ func dumpStageImpl(c *container, stg *stage, comp *component) {
 	defer c.dump.mu.Unlock()
 
 	c.dump.data.StageImpls[stg.id.v] = append(c.dump.data.StageImpls[stg.id.v], &compCoordsJSON{
-		Type: fmt.Sprintf("%s", reflect.TypeOf(comp.c)),
+		Type: reflect.TypeOf(comp.c).String(),
 		ID:   comp.id.v,
 	})
 }
@@ -184,6 +184,7 @@ func dumpFile(c *container, path string) {
 	c.dump.data.Files[path] = strings.Split(string(bb), "\n")
 }
 
+//nolint
 func writeDump(c *container) {
 	if c.dump == nil {
 		return

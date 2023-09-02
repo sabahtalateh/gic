@@ -54,20 +54,20 @@ func (w withStageImpl[T]) addOptionCallInfo() string {
 	return fmt.Sprintf("gic.WithStageImpl[%s]\n%s", reflect.TypeOf(t), w.c)
 }
 
-// WithInitE set component initialization function which can return error
+// WithInitE set component initialization function which can return error.
 func WithInitE[T any](f func() (T, error)) withInitE[T] { return withInitE[T]{f: f, c: makeCaller()} }
 
-// WithInit set component initialization function
+// WithInit set component initialization function.
 func WithInit[T any](f func() T) withInit[T] { return withInit[T]{f: f, c: makeCaller()} }
 
-// WithStageImpl set stage implementation function
+// WithStageImpl set stage implementation function.
 func WithStageImpl[T any](s stage, onStage func(context.Context, T) error) withStageImpl[T] {
 	return withStageImpl[T]{impl: stageImpl[T]{s: s, onStage: onStage}, c: makeCaller()}
 }
 
 // Add adds component init function into container
 // Added functions will be run on Init call
-// This function be called only from init() function so it panics on error
+// This function be called only from init() function so it panics on error.
 func Add[T any](opts ...addOption[T]) {
 	err := add[T](globC, makeAddOptions[T](opts...))
 	check(err)
@@ -76,7 +76,7 @@ func Add[T any](opts ...addOption[T]) {
 func makeAddOptions[T any](opts ...addOption[T]) addOptions[T] {
 	ao := addOptions[T]{stageImps: map[id]func(context.Context, T) error{}}
 
-	// TODO check options repeat (2 calls to ic.Start for example)
+	// TODO check options repeat (2 calls to ic.Start for example).
 	for _, opt := range opts {
 		switch o := opt.(type) {
 		case withID:
@@ -195,7 +195,9 @@ func checkAdd[T any](comps map[string]*component, id id) error {
 	if comp, ok := comps[id.v]; ok {
 		return errors.Join(
 			ErrComponentAdded,
-			fmt.Errorf("component of type %s with id %s already added\n%s\n%s", reflect.TypeOf(t), id.v, comp.caller, makeCaller()),
+			fmt.Errorf(
+				"component of type %s with id %s already added\n%s\n%s", reflect.TypeOf(t), id.v, comp.caller, makeCaller(),
+			),
 		)
 	}
 
