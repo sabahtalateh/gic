@@ -3,14 +3,12 @@ package interfaces
 import (
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/sabahtalateh/gic"
 )
 
-func init() {
-	_ = gic.Init()
-}
-
-type Int interface {
+type Iface interface {
 	F()
 }
 
@@ -18,7 +16,20 @@ type Impl struct{}
 
 func (i Impl) F() {}
 
-func TestCanNotKeepInterface(t *testing.T) {
-	// err := gic.ComponentE[Int](gic.ID(), func() (Int, error) { return &Impl{}, nil })
-	// require.ErrorIs(t, err, gic.ErrInterface)
+var initErr error
+
+func init() {
+	defer func() {
+		if r := recover(); r != nil {
+			switch e := r.(type) {
+			case error:
+				initErr = e
+			}
+		}
+	}()
+	gic.Add[Iface](gic.WithInit(func() Iface { return &Impl{} }))
+}
+
+func TestAddInterfacePanics(t *testing.T) {
+	require.ErrorIs(t, initErr, gic.ErrInterface)
 }

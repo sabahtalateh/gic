@@ -129,7 +129,7 @@ func add[T any](c *container, ao addOptions[T]) error {
 
 func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall caller) error {
 	if comps, ok := c.components[typ]; ok {
-		if err := checkAdd(comps, ao.id); err != nil {
+		if err := checkAdd[T](comps, ao.id); err != nil {
 			return err
 		}
 	} else {
@@ -183,10 +183,15 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 	return nil
 }
 
-func checkAdd(comps map[string]*component, id id) error {
-	// FORBIDDEN to have same id for different components
+func checkAdd[T any](comps map[string]*component, id id) error {
+	var t T
+
+	// FORBIDDEN to have same id for same type
 	if comp, ok := comps[id.v]; ok {
-		return errIDInUse(id, comp.caller, makeCaller())
+		return errors.Join(
+			ErrComponentAdded,
+			fmt.Errorf("component of type %s with id %s already added\n%s\n%s", reflect.TypeOf(t), id.v, comp.caller, makeCaller()),
+		)
 	}
 
 	return nil

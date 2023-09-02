@@ -1,9 +1,11 @@
 package list
 
 import (
-	"github.com/sabahtalateh/gic"
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/sabahtalateh/gic"
 )
 
 type Deps struct {
@@ -35,10 +37,12 @@ func init() {
 		gic.WithID(D1),
 		gic.WithInit(func() *Dep1 { return &Dep1{} }),
 	)
+
 	gic.Add[*Dep2](
 		gic.WithID(D2),
 		gic.WithInit(func() *Dep2 { return &Dep2{} }),
 	)
+
 	gic.Add[*Deps](
 		gic.WithInit(func() *Deps {
 			return &Deps{Deps: gic.List[Dep](

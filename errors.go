@@ -1,7 +1,6 @@
 package gic
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -13,11 +12,11 @@ func check(err error) {
 
 var (
 	// TODO link to doc in errors texts
-	ErrInitialized        = fmt.Errorf("already initialized")
-	ErrNotInitialized     = fmt.Errorf("not initialized. call gic.Init")
+	ErrInitialized        = fmt.Errorf("container already initialized")
+	ErrNotInitialized     = fmt.Errorf("container not initialized. call gic.Init")
 	ErrNoInit             = fmt.Errorf("no init function. use gic.WithInit or gic.WithInitE")
-	ErrBothInit           = fmt.Errorf("both Init and InitE set. use one")
-	ErrIDInUse            = fmt.Errorf("component id in use")
+	ErrBothInit           = fmt.Errorf("both gic.Init and git.InitE used. use one")
+	ErrComponentAdded     = fmt.Errorf("component added")
 	ErrNotFound           = fmt.Errorf("not found")
 	ErrInterface          = fmt.Errorf("container can not keep interfaces")
 	ErrNotFromInit        = fmt.Errorf("component should be added from init function")
@@ -25,7 +24,3 @@ var (
 	ErrStageRegistered    = fmt.Errorf("stage already registered")
 	ErrStageNotRegistered = fmt.Errorf("stage not registered")
 )
-
-func errIDInUse(id id, where caller, c caller) error {
-	return errors.Join(ErrIDInUse, fmt.Errorf("component id %s in use\n%s\n%s", id, where, c))
-}
