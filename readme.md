@@ -124,6 +124,19 @@ func init() {
 	)
 }
 ```
+IDs also used to get components
+```go
+func init() {
+	gic.Add[*Service](
+		gic.WithInit(func() *Service {
+			return &Service{
+				writeDB: gic.Get[*DB](gic.WithID(Write)),
+				readDB:  gic.Get[*DB](gic.WithID(Read)),
+			}
+		}),
+	)
+}
+```
 
 ## Stages
 
