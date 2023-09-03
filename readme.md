@@ -225,31 +225,27 @@ func init() {
 
 `Start` and `Stop` `stages` runs manually after `gic.Init`
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
 ```go
 func main() {
 	// ...
 	err = gic.Init()
-	require.Nil(t, err)
+	// ...
 	
 	// Control Start timeout with context
 	err = gic.Start(context.Background())
-	if err != nil {
-		panic(err)
-	}
+	// ...
 
 	ne, err := gic.GetE[*internal.NumbersEater]()
-	if err != nil {
-		panic(err)
-	}
+	// ...
+	
 	ne.Feed(1)
 	ne.Feed(2)
 	// ...
 
 	// Control Stop timeout with context
 	err = gic.Start(context.Background())
-	if err != nil {
-		panic(err)
-	}
+	// ...
 }
 ```
 
