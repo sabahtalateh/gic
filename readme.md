@@ -84,7 +84,7 @@ Hello World!
 
 ### ID
 
-To create an instances of one struct with different parameters `gic.ID` is used. After creation use `gic.WithID` to get component by ID
+To be able to have an instances of one struct with different parameters `gic.ID` is used. After `gic.Init` use `gic.WithID` to get component by ID
 
 ```go
 package internal
@@ -93,7 +93,7 @@ import (
 	"fmt"
 	
 	"github.com/sabahtalateh/gic"
-    "github.com/sabahtalateh/gic/tests/example/internal"
+	"github.com/sabahtalateh/gic/tests/example/internal"
 )
 
 type Greeter struct {
