@@ -316,6 +316,8 @@ func main() {
 
 ## Dump
 
-Container contents can be dumped 
+Container contents can be dumped. 
+
+Dump written at last step of `gic.Init`
 
 (see: https://github.com/sabahtalateh/gicex/blob/main/main.go#L16)
