@@ -159,9 +159,9 @@ starting/stopping worker event consumers and so on. To implement `Start` or `Sto
 and `gic.WithStop`. Pass function accepting `context.Context` and component. Context can be set from outside to stop `stage`
 execution with timeout
 
-### Implementing Start and Stop
+### Implementing Start & Stop
 
-(see: )
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/numberseater.go)
 
 ```go
 package internal
@@ -207,15 +207,49 @@ func init() {
 		gic.WithInit(func() *NumbersEater {
 			return &NumbersEater{c: make(chan int)}
 		}),
+		// Implement Start
 		gic.WithStart(func(_ context.Context, ne *NumbersEater) error {
 			ne.Start()
 			return nil
 		}),
+		// Implement Stop
 		gic.WithStop(func(ctx context.Context, ne *NumbersEater) error {
 			ne.Stop()
 			return nil
 		}),
 	)
+}
+```
+
+### Running Start & Stop
+
+`Start` and `Stop` `stages` runs manually after `gic.Init`
+
+```go
+func main() {
+	// ...
+	err = gic.Init()
+	require.Nil(t, err)
+	
+	// Control Start timeout with context
+	err = gic.Start(context.Background())
+	if err != nil {
+		panic(err)
+	}
+
+	ne, err := gic.GetE[*internal.NumbersEater]()
+	if err != nil {
+		panic(err)
+	}
+	ne.Feed(1)
+	ne.Feed(2)
+	// ...
+
+	// Control Stop timeout with context
+	err = gic.Start(context.Background())
+	if err != nil {
+		panic(err)
+	}
 }
 ```
 
