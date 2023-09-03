@@ -10,13 +10,13 @@ Example project with Postgres DB can be found here https://github.com/sabahtalat
 
 ## Concept
 
-`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems: 
+`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems (at least): 
 - Dependencies cycling problem. As project will not be compiled if cycles exists
-- Unused components will not be included into container as they never imported
+- Unused components will not be included into container. As they never imported
 
 **NOTE** This last point is a bit tricky as we need to retrieve `component` from `container` somewhere in program (or just import `component's` package) so it to be initialized
 
-Let's use this mechanism to compose dependency injection container
+Let's use `init` mechanism to compose dependency injection container
 
 We will add `struct instances` (A.K.A. `components`) into container within `init` function with `gic.Add`. Components will be
 added at the same file the structs are defined. It will take us to the point where we have all the `components` of some package by
@@ -107,7 +107,7 @@ Hello World!
 
 ### ID
 
-To be able to have an instances of one struct with different parameters `gic.ID` is used. After `gic.Init` use `gic.WithID` to get
+To be able to have instances of one struct with different parameters (or just multiple times) `gic.ID` used. After `gic.Init` use `gic.GetE(gic.WithID..)` to get
 component by ID
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
@@ -152,9 +152,9 @@ func init() {
 func main() {
 // ...
 
-g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.RussianGreeter))
+	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.RussianGreeter))
 
-g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
+	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
 
 }
 ```
@@ -163,8 +163,7 @@ g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
 
 Container has two predefined `stages`: `Start` and `Stop`. It can be useful for opening/closing db client sockets,
 starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart`
-and `gic.WithStop`. Pass function accepting `context.Context` and component. Context can be set from outside to stop `stage`
-execution with timeout
+and `gic.WithStop`. Pass function accepting `context.Context` and `component`. Context can be set from outside to stop `stage` execution by timeout
 
 Custom `stages` also can be registered 
 
@@ -265,7 +264,8 @@ To add custom `stage` manually use `gic.RegisterStage`
 Stage configuration options:
 - `stage` should have unique ID (`gic.WithID`)
 - By default `stage` will be run in `parallel` on all implementing components (see: https://github.com/sabahtalateh/gic/blob/main/stage.go). May be disabled with `gic.WithDisableParallel`
-- By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse  to initialization order). **NOTE** order will not take effect until parallel disabled with `gic.WithDisableParallel`
+- By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse  to initialization order). 
+**NOTE** order will not take effect until parallel disabled with `gic.WithDisableParallel`
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/mystage.go)
 ```go
