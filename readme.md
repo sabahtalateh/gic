@@ -22,8 +22,9 @@ There is also such feature as `stage` which allows us to execute some action on 
 
 ### Add
 
-To add component use `gic.Add` from `init` function. If called from another function `gic.Add` will panic. Checked with `runtime.Caller`. (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
+To add component use `gic.Add` from `init` function. If called from another function `gic.Add` will panic. Checked with `runtime.Caller`. 
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
 ```go
 package internal
 
@@ -46,8 +47,9 @@ func init() {
 
 ### Init
 
-Then in your app entry point initialize global container (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go). As said above `gic.Init()` will call initialization functions added in `init` functions. Functions will be called in adding order which is equal to `init`-calls order
+Then in your app entry point initialize global container. As said above `gic.Init()` will call initialization functions added in `init` functions. Functions will be called in adding order which is equal to `init`-calls order
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
 ```go
 package main
 
@@ -61,8 +63,9 @@ func main() {
 
 ### Get
 
-Now we can get our component from container with `gic.Get` or `gic.GetE` (`gic.Get` will panic on errors) (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go). Provide component type you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
+Now we can get our component from container with `gic.Get` or `gic.GetE` (`gic.Get` will panic on errors). Provide component type you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
 ```go
 package main
 
