@@ -265,6 +265,7 @@ Stage configuration options:
 - `stage` should have unique ID (`gic.WithID`)
 - By default `stage` will be run in `parallel` on all implementing components (see: https://github.com/sabahtalateh/gic/blob/main/stage.go). May be disabled with `gic.WithDisableParallel`
 - By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse  to initialization order). 
+
 **NOTE** order will not take effect until parallel disabled with `gic.WithDisableParallel`
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/mystage.go)
