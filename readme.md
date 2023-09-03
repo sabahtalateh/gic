@@ -46,7 +46,7 @@ func init() {
 
 ### Init
 
-Then in your `main` function initialize global container
+Then in your `main` function initialize global container. As said above `gic.Init()` will call initialization functions added in `init` functions. Functions will be called in adding order which is equal to `init`-calls order
 
 ```go
 package main
@@ -61,7 +61,7 @@ func main() {
 
 ### Get
 
-Now we can get our component from container with `gic.Get` or `gic.GetE`
+Now we can get our component from container with `gic.Get` or `gic.GetE`. Provide component type you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
 
 ```go
 package main
