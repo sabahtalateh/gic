@@ -150,7 +150,7 @@ func init() {
 
 ```go
 func main() {
-// ...
+	// ...
 
 	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.RussianGreeter))
 
