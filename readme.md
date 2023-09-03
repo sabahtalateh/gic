@@ -4,6 +4,10 @@
 - `(I)` Components added in `init` function
 - `(C)` ontainer
 
+## Example
+
+Example project with Postgres DB can be found here https://github.com/sabahtalateh/gicex
+
 ## Concept
 
 `Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems: 
