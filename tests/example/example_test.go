@@ -12,11 +12,14 @@ import (
 	"github.com/sabahtalateh/gic/tests/example/internal"
 )
 
+func init() {
+	if err := gic.Init(); err != nil {
+		panic(err)
+	}
+}
+
 func TestGreeter(t *testing.T) {
 	var err error
-
-	err = gic.Init()
-	require.Nil(t, err)
 
 	var g *internal.Greeter
 	g, err = gic.GetE[*internal.Greeter]()
@@ -34,9 +37,6 @@ func TestGreeter(t *testing.T) {
 
 func TestStartStop(t *testing.T) {
 	var err error
-
-	err = gic.Init()
-	require.Nil(t, err)
 
 	err = gic.Start(context.Background())
 	require.Nil(t, err)
@@ -59,9 +59,6 @@ func TestStartStop(t *testing.T) {
 
 func TestMyStage(t *testing.T) {
 	var err error
-
-	err = gic.Init()
-	require.Nil(t, err)
 
 	err = gic.RunStage(context.Background(), internal.MyStage)
 	require.Nil(t, err)
