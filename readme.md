@@ -6,7 +6,7 @@
 
 ## Concept
 
-`Golang` has `init` mechanism. Package's `init` functions automatically called for all the project in hierarchy. `init` mechanism also solves dependencies cycling problem as project will not be compiled if cycles exists
+`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism also solves dependencies cycling problem as project will not be compiled if cycles exists
 
 Let's use this mechanism to compose dependency injection container
 
@@ -82,7 +82,7 @@ Hello World!
 
 ### ID
 
-To create an instances of one struct with different parameters `gic.ID` is used. After creation use `gic.WithID` to get component by  ID
+To create an instances of one struct with different parameters `gic.ID` is used. After creation use `gic.WithID` to get component by ID
 
 ```go
 package internal
