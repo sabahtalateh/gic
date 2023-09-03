@@ -313,3 +313,9 @@ func main() {
 	// ...   
 }
 ```
+
+## Dump
+
+Container contents can be dumped 
+
+(see: https://github.com/sabahtalateh/gicex/blob/main/main.go#L16)
