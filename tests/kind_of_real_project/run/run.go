@@ -5,6 +5,17 @@ import (
 	"github.com/sabahtalateh/gic/tests/kind_of_real_project/service"
 )
 
+type A struct {
+}
+
+func init() {
+	gic.Add[[]A](
+		gic.WithInit(func() []A {
+			return []A{{}, {}}
+		}),
+	)
+}
+
 func Run() []string {
 	if err := gic.Init(); err != nil {
 		panic(err)
