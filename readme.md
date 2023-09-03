@@ -159,6 +159,8 @@ starting/stopping event consumers and workers and so on. To implement `Start` or
 and `gic.WithStop`. Pass function accepting `context.Context` and component. Context can be set from outside to stop `stage`
 execution with timeout
 
+Custom `stages` also can be registered 
+
 ### Implementing Start & Stop
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/numberseater.go)
