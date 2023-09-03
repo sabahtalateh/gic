@@ -86,6 +86,7 @@ Hello World!
 
 To be able to have an instances of one struct with different parameters `gic.ID` is used. After `gic.Init` use `gic.WithID` to get component by ID
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
 ```go
 package internal
 
@@ -120,6 +121,7 @@ func init() {
 }
 ```
 
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
 ```go
 func main() {
 	// ...
