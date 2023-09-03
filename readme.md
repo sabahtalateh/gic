@@ -61,7 +61,7 @@ func main() {
 
 ### Get
 
-Now we can get our component from container with `gic.Get` or `gic.GetE`. Provide component type you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
+Now we can get our component from container with `gic.Get` or `gic.GetE` (`gic.Get` will panic on errors). Provide component type you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
 
 ```go
 package main
