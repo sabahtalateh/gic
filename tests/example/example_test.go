@@ -56,3 +56,15 @@ func TestStartStop(t *testing.T) {
 	err = gic.Stop(context.Background())
 	require.Nil(t, err)
 }
+
+func TestMyStage(t *testing.T) {
+	var err error
+
+	err = gic.Init()
+	require.Nil(t, err)
+
+	err = gic.RunStage(context.Background(), internal.MyStage)
+	require.Nil(t, err)
+
+	require.Equal(t, 999, gic.Get[*internal.Dummy]().X)
+}
