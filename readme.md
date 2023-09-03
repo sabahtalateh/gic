@@ -14,7 +14,7 @@ Example project with Postgres DB can be found here https://github.com/sabahtalat
 - Dependencies cycling problem. As project will not be compiled if cycles exists
 - Unused components will not be included into container as they never imported
 
-**NOTE** Last point is a bit tricky one as we will need to retrieve component from container somewhere in program so it to be initialized
+**NOTE** This last point is a bit tricky as we need to retrieve `component` from `container` somewhere in program (or just import `component's` package) so it to be initialized
 
 Let's use this mechanism to compose dependency injection container
 
