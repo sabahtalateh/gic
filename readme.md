@@ -316,7 +316,7 @@ func main() {
 
 ## Dump
 
-Container contents can be dumped. 
+Container contents can be dumped. Dump directory will contain static `index.html` which can be opened in browser, `dump.json` with list of components and stages and some `js` and `css` files created with https://github.com/sabahtalateh/gicdump
 
 Dump written at last step of `gic.Init`
 
