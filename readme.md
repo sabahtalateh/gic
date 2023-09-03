@@ -251,7 +251,7 @@ func main() {
 }
 ```
 
-### Add stage
+### Add custom stage
 
 To add custom `stage` manually use `gic.RegisterStage`
 
@@ -269,7 +269,7 @@ var MyStage = gic.RegisterStage(
 )
 ```
 
-### Implement stage
+### Implement custom stage
 
 To implement stage use `gic.WithStageImpl`
 
@@ -292,5 +292,17 @@ func init() {
 }
 ```
 
-### Run stage
+### Run custom stage
+
+To run custom stage use `gic.RunStage` after `gic.Init`
+
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
+```go
+func main() {
+	_ = gic.Init()
+	// ...
+	err = gic.RunStage(context.Background(), internal.MyStage)
+	// ...   
+}
+```
 
