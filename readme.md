@@ -6,8 +6,11 @@
 
 ## Concept
 
-`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism also solves
-dependencies cycling problem as project will not be compiled if cycles exists
+`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems: 
+- Dependencies cycling problem. As project will not be compiled if cycles exists
+- Unused components will not be included into container as they never imported
+
+**NOTE** Last point is a bit tricky one as we will need to retrieve component from container somewhere in program so it to be initialized
 
 Let's use this mechanism to compose dependency injection container
 
