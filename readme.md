@@ -155,7 +155,7 @@ g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
 ## Stages
 
 Container has two predefined `stages`: `Start` and `Stop`. It can be useful for opening/closing db client sockets,
-starting/stopping worker event consumers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart`
+starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart`
 and `gic.WithStop`. Pass function accepting `context.Context` and component. Context can be set from outside to stop `stage`
 execution with timeout
 
