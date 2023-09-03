@@ -260,7 +260,7 @@ Stage configuration options:
 - By default `stage` will be run in `parallel` on all implementing components (see: https://github.com/sabahtalateh/gic/blob/main/stage.go). May be disabled with `gic.WithDisableParallel`
 - By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse  to initialization order). **NOTE** order will not take effect until parallel disabled with `gic.WithDisableParallel`
 
-(see: )
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/mystage.go)
 ```go
 var MyStage = gic.RegisterStage(
 	gic.WithID(gic.ID("MyStage")),
@@ -270,6 +270,27 @@ var MyStage = gic.RegisterStage(
 ```
 
 ### Implement stage
+
+To implement stage use `gic.WithStageImpl`
+
+(see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/mystage.go)
+```go
+type Dummy struct {
+	X int
+}
+
+func init() {
+	gic.Add[*Dummy](
+		gic.WithInit(func() *Dummy {
+			return &Dummy{}
+		}),
+		gic.WithStageImpl(MyStage, func(ctx context.Context, d *Dummy) error {
+			d.X = 999
+			return nil
+		}),
+	)
+}
+```
 
 ### Run stage
 
