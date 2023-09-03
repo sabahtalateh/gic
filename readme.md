@@ -318,6 +318,14 @@ func main() {
 
 Container contents can be dumped. Dump directory will contain static `index.html` which can be opened in browser, `dump.json` with list of components and stages and some `js` and `css` files created with https://github.com/sabahtalateh/gicdump
 
+Configure dump before call `gic.Init`
+
+```go
+err := gic.ConfigureGlobalContainer(
+    gic.WithDump(gic.WithDumpDir("./dump")),
+)
+```
+
 Dump written at last step of `gic.Init`
 
 (see: https://github.com/sabahtalateh/gicex/blob/main/main.go#L16)
