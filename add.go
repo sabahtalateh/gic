@@ -67,7 +67,7 @@ func WithStageImpl[T any](s stage, onStage func(context.Context, T) error) withS
 
 // Add adds component init function into container
 // Added functions will be run on Init call
-// This function be called only from init() function so it panics on error
+// This function be called only from init() function so it panics on error.
 func Add[T any](opts ...addOption[T]) {
 	err := add[T](globC, makeAddOptions[T](opts...))
 	check(err)
