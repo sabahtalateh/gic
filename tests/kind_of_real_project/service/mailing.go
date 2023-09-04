@@ -39,8 +39,8 @@ func init() {
 		gic.WithID(MailingID),
 		gic.WithInit(func() Mailing {
 			return Mailing{
-				userRepo1: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo1)),
-				userRepo2: gic.Get[*repo.UserRepo](gic.WithID(repo.Repo2)),
+				userRepo1: gic.MustGet[*repo.UserRepo](gic.WithID(repo.Repo1)),
+				userRepo2: gic.MustGet[*repo.UserRepo](gic.WithID(repo.Repo2)),
 			}
 		}),
 	)

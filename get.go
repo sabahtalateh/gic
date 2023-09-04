@@ -13,9 +13,9 @@ import (
 type getOpts struct{ id id }
 type getOpt interface{ applyGetOption(*getOpts) }
 
-// GetE return component from container
+// Get return component from container
 // errors: ErrNotFound
-func GetE[T any](opts ...getOpt) (T, error) {
+func Get[T any](opts ...getOpt) (T, error) {
 	oo := getOpts{}
 	for _, opt := range opts {
 		opt.applyGetOption(&oo)
@@ -24,10 +24,10 @@ func GetE[T any](opts ...getOpt) (T, error) {
 	return get[T](globC, oo)
 }
 
-// Get return component from container. panics on GetE error
+// MustGet return component from container. panics on Get error
 // errors: ErrNotFound
-func Get[T any](opts ...getOpt) T {
-	t, err := GetE[T](opts...)
+func MustGet[T any](opts ...getOpt) T {
+	t, err := Get[T](opts...)
 	check(err)
 	return t
 }

@@ -27,6 +27,6 @@ func init() {
 func TestComponentNotFoundWithID(t *testing.T) {
 	_ = gic.Init()
 
-	_, err := gic.GetE[*Component](gic.WithID(NotExists))
+	_, err := gic.Get[*Component](gic.WithID(NotExists))
 	require.ErrorIs(t, err, gic.ErrNotFound)
 }

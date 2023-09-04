@@ -33,12 +33,12 @@ func TestComponentNotFoundWithoutID(t *testing.T) {
 
 	_ = gic.Init()
 
-	_, err = gic.GetE[*Component](gic.WithID(SomeComponent))
+	_, err = gic.Get[*Component](gic.WithID(SomeComponent))
 	require.ErrorIs(t, err, gic.ErrNotFound)
 
-	_, err = gic.GetE[*Component2]()
+	_, err = gic.Get[*Component2]()
 	require.ErrorIs(t, err, gic.ErrNotFound)
 
-	_, err = gic.GetE[*Component2](gic.WithID(SomeComponent))
+	_, err = gic.Get[*Component2](gic.WithID(SomeComponent))
 	require.ErrorIs(t, err, gic.ErrNotFound)
 }

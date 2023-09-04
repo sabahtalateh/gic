@@ -22,15 +22,15 @@ func TestGreeter(t *testing.T) {
 	var err error
 
 	var g *internal.Greeter
-	g, err = gic.GetE[*internal.Greeter]()
+	g, err = gic.Get[*internal.Greeter]()
 	require.Nil(t, err)
 	require.Equal(t, "Hello World!", g.Greet("World"))
 
-	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.RussianGreeter))
+	g, err = gic.Get[*internal.Greeter](gic.WithID(internal.RussianGreeter))
 	require.Nil(t, err)
 	require.Equal(t, "Привет Мир!", g.Greet("Мир"))
 
-	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
+	g, err = gic.Get[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
 	require.Nil(t, err)
 	require.Equal(t, "你好 世界!", g.Greet("世界"))
 }
@@ -42,7 +42,7 @@ func TestStartStop(t *testing.T) {
 	require.Nil(t, err)
 
 	var ne *internal.NumbersEater
-	ne, err = gic.GetE[*internal.NumbersEater]()
+	ne, err = gic.Get[*internal.NumbersEater]()
 	require.Nil(t, err)
 
 	ne.Feed(1)
@@ -63,5 +63,5 @@ func TestMyStage(t *testing.T) {
 	err = gic.RunStage(context.Background(), internal.MyStage)
 	require.Nil(t, err)
 
-	require.Equal(t, 999, gic.Get[*internal.Dummy]().X)
+	require.Equal(t, 999, gic.MustGet[*internal.Dummy]().X)
 }

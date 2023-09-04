@@ -46,8 +46,8 @@ func init() {
 	gic.Add[*Deps](
 		gic.WithInit(func() *Deps {
 			return &Deps{Deps: gic.List[Dep](
-				gic.Get[*Dep1](gic.WithID(D1)),
-				gic.Get[*Dep2](gic.WithID(D2)),
+				gic.MustGet[*Dep1](gic.WithID(D1)),
+				gic.MustGet[*Dep2](gic.WithID(D2)),
 			)}
 		}),
 	)
@@ -55,7 +55,7 @@ func init() {
 
 func TestList(t *testing.T) {
 	_ = gic.Init()
-	c := gic.Get[*Deps]()
+	c := gic.MustGet[*Deps]()
 	var out []string
 	for _, dep := range c.Deps {
 		out = append(out, dep.Dep())

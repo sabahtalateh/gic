@@ -28,7 +28,7 @@ func (d *DB) Query(q string) string {
 func init() {
 	gic.Add[*DB](
 		gic.WithInit(func() *DB {
-			return &DB{dsn: gic.Get[*config.Config]().DB.DSN}
+			return &DB{dsn: gic.MustGet[*config.Config]().DB.DSN}
 		}),
 	)
 }

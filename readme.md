@@ -10,7 +10,7 @@ Example project with Postgres DB can be found here https://github.com/sabahtalat
 
 ## Concept
 
-`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems (at least): 
+`Golang` has `init` mechanism. Package's `init` functions automatically called in hierarchy. `init` mechanism solves two problems (at least):
 - Dependencies cycling problem. As project will not be compiled if cycles exists
 - Unused components will not be included into container. As they never imported
 
@@ -26,7 +26,7 @@ to [their array](https://github.com/sabahtalateh/gic/blob/main/add.go#L130)
 Then in program entry point we call `gic.Init` to [create components](https://github.com/sabahtalateh/gic/blob/main/init.go#L12)
 with function passed to `gic.Add`
 
-That's all, we have initialized global container and can use `gic.Get/gic.GetE` to retrieve component
+That's all, we have initialized global container and can use `gic.Get/gic.MustGet` to retrieve component
 
 There is also such feature as `stage` which allows us to execute some action on all the `components`
 implementing `stage`. [Read more](https://github.com/sabahtalateh/gic#stages)
@@ -80,7 +80,7 @@ func main() {
 
 ### Get
 
-Now we can get our component from container with `gic.Get` or `gic.GetE` (`gic.Get` will panic on errors). Provide component type
+Now we can get our component from container with `gic.Get` or `gic.MustGet` (panic on errors). Provide component type
 you want to get and component id if it was added with `gic.WithID` id (see: https://github.com/sabahtalateh/gic#id)
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/example_test.go)
@@ -107,7 +107,7 @@ Hello World!
 
 ### ID
 
-To be able to have instances of one struct with different parameters (or just multiple times) `gic.ID` used. After `gic.Init` use `gic.GetE(gic.WithID..)` to get
+To be able to have instances of one struct with different parameters (or just multiple times) `gic.ID` used. After `gic.Init` use `gic.Get(gic.WithID..)` to get
 component by ID
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
@@ -152,9 +152,9 @@ func init() {
 func main() {
 	// ...
 
-	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.RussianGreeter))
+	g, err = gic.Get[*internal.Greeter](gic.WithID(internal.RussianGreeter))
 
-	g, err = gic.GetE[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
+	g, err = gic.Get[*internal.Greeter](gic.WithID(internal.ChineseGreeter))
 
 }
 ```
@@ -162,10 +162,9 @@ func main() {
 ## Stages
 
 Container has two predefined `stages`: `Start` and `Stop`. It can be useful for opening/closing db client sockets,
-starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart`
-and `gic.WithStop`. Pass function accepting `context.Context` and `component`. Context can be set from outside to stop `stage` execution by timeout
+starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart` and `gic.WithStop`. Pass function accepting `context.Context` and `component`. Context can be set from outside to stop `stage` execution by timeout
 
-Custom `stages` also can be registered 
+Custom `stages` also can be registered
 
 ### Implementing Start & Stop
 
@@ -243,14 +242,14 @@ func main() {
 	// Control Start timeout with context
 	err = gic.Start(context.Background())
 	// ...
-
-	ne, err := gic.GetE[*internal.NumbersEater]()
+	
+	ne, err := gic.Get[*internal.NumbersEater]()
 	// ...
 	
 	ne.Feed(1)
 	ne.Feed(2)
 	// ...
-
+	
 	// Control Stop timeout with context
 	err = gic.Start(context.Background())
 	// ...
@@ -262,13 +261,15 @@ func main() {
 To add custom `stage` manually use `gic.RegisterStage`
 
 Stage configuration options:
+
 - `stage` should have unique ID (`gic.WithID`)
 - By default `stage` will be run in `parallel` on all implementing components (see: https://github.com/sabahtalateh/gic/blob/main/stage.go). May be disabled with `gic.WithDisableParallel`
-- By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse  to initialization order). 
+- By default `stage` will be run without order. May be changed with `gic.WithInitOrder` (same order as components were initialized) and `gic.WithReverseInitOrder` (reverse to initialization order).
 
 **NOTE** order will not take effect until `parallel` disabled with `gic.WithDisableParallel`
 
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/mystage.go)
+
 ```go
 var MyStage = gic.RegisterStage(
 	gic.WithID(gic.ID("MyStage")),

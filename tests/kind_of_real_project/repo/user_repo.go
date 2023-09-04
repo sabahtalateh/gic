@@ -25,11 +25,11 @@ var Repo1, Repo2 = gic.ID("UserRepo1"), gic.ID("UserRepo2")
 func init() {
 	gic.Add[*UserRepo](
 		gic.WithID(Repo1),
-		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.Get[*system.DB]()} }),
+		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.MustGet[*system.DB]()} }),
 	)
 
 	gic.Add[*UserRepo](
 		gic.WithID(Repo2),
-		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.Get[*system.DB]()} }),
+		gic.WithInit(func() *UserRepo { return &UserRepo{db: gic.MustGet[*system.DB]()} }),
 	)
 }

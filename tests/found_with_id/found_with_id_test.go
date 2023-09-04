@@ -26,7 +26,7 @@ func init() {
 func TestComponentFoundByID(t *testing.T) {
 	_ = gic.Init()
 
-	comp, err := gic.GetE[*Component](gic.WithID(SomeComponent))
+	comp, err := gic.Get[*Component](gic.WithID(SomeComponent))
 	require.NoError(t, err)
 	require.NotNil(t, comp)
 	require.Equal(t, comp.prop, "value")

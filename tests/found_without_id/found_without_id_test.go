@@ -23,7 +23,7 @@ func init() {
 func TestComponentFoundWithoutID(t *testing.T) {
 	_ = gic.Init()
 
-	comp, err := gic.GetE[*Component]()
+	comp, err := gic.Get[*Component]()
 	require.NoError(t, err)
 	require.NotNil(t, comp)
 	require.Equal(t, comp.prop, "value")
