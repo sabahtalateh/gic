@@ -39,8 +39,18 @@ func get[T any](c *container, opts getOpts) (t T, err error) {
 		return t, err
 	}
 
+	// T found
+	if comps, ok := c.components[lookFor]; ok {
+		comp, err := compByID(comps, lookFor, opts.id)
+		if err != nil {
+			return t, err
+		}
+		return comp.c.(T), nil
+	}
+
+	// Try to find type assignable to T
 	for typ, comps := range c.components {
-		if !(typ == lookFor || typ.AssignableTo(lookFor)) {
+		if !typ.AssignableTo(lookFor) {
 			continue
 		}
 
@@ -49,22 +59,15 @@ func get[T any](c *container, opts getOpts) (t T, err error) {
 			return t, err
 		}
 
-		if typ == lookFor {
-			if c.dump != nil {
-				c.dump.got = append(c.dump.got, comp)
-			}
-			return comp.c.(T), nil
-		}
-
-		if typ.AssignableTo(lookFor) {
-			return reflect.ValueOf(comp.c).Convert(lookFor).Interface().(T), nil
-		}
+		return reflect.ValueOf(comp.c).Convert(lookFor).Interface().(T), nil
 	}
 
+	// T not found. Try hint
 	if err = hint(c.components, lookFor, makeCaller()); err != nil {
 		return t, errors.Join(ErrNotFound, err)
 	}
 
+	// T Not found
 	return t, errors.Join(ErrNotFound, fmt.Errorf("%s[id=%s] not found %s", lookFor, opts.id, makeCaller()))
 }
 
