@@ -106,6 +106,13 @@ func add[T any](c *container, ao addOptions[T]) error {
 		call = makeCaller()
 	)
 
+	c.mu.Lock()
+	if c.initialized {
+		c.mu.Unlock()
+		return ErrInitialized
+	}
+	c.mu.Unlock()
+
 	if call.found {
 		if err = checkCallFromInit(call); err != nil {
 			return err
