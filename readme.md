@@ -38,17 +38,7 @@ implementing `stage`. [Read more](https://github.com/sabahtalateh/gic#stages)
 To add component use `gic.Add` from `init` function. If called not from `init` it will panic. Checked
 with `runtime.Caller`
 
-Component initialization function passed with `gic.WithInit` or `gic.WithInitE` if there may be an error during the initialization
-
-Possible `gic.Add` arguments:
-- `gic.WithInit` - component initialization function
-- `git.WithInitE` - component initialization function returning error
-- `gic.WithStart` - implementation of `Start` stage (see: (https://github.com/sabahtalateh/gic#stages)
-- `gic.WithStop` - implementation of `Stop` stage (see: (https://github.com/sabahtalateh/gic#stages)
-- `gic.WithStageImpl` - implementation of custom stage (see: (https://github.com/sabahtalateh/gic#stages)
-
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
-
 ```go
 package internal
 
@@ -68,6 +58,15 @@ func init() {
 	)
 }
 ```
+
+Component initialization function passed with `gic.WithInit` or `gic.WithInitE` if there may be an error during the initialization
+
+Possible `gic.Add` arguments:
+- `gic.WithInit` - component initialization function
+- `git.WithInitE` - component initialization function returning error
+- `gic.WithStart` - implementation of `Start` stage (see: (https://github.com/sabahtalateh/gic#stages)
+- `gic.WithStop` - implementation of `Stop` stage (see: (https://github.com/sabahtalateh/gic#stages)
+- `gic.WithStageImpl` - implementation of custom stage (see: (https://github.com/sabahtalateh/gic#stages)
 
 ### Init
 
