@@ -1,7 +1,7 @@
 # GIC - Global Init Container
 
-- `(G)` It stored in a [global variable](https://github.com/sabahtalateh/gic/blob/main/container.go#L60) `globC`
-- `(I)` Components added in `init` function
+- `(G)` It stored in a [global variable](https://github.com/sabahtalateh/gic/blob/main/container.go#L60) `globC` (because - who needs multiple containers?)
+- `(I)` Components added in `init` function (so can not be added dynamically. because - who needs it?)
 - `(C)` ontainer
 
 ## Example
