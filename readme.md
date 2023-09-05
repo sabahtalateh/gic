@@ -38,6 +38,8 @@ implementing `stage`. [Read more](https://github.com/sabahtalateh/gic#stages)
 To add component use `gic.Add` from `init` function. If called not from `init` it will panic. Checked
 with `runtime.Caller`
 
+**NOTE**: Function passed to `gic.WithInit` will not be called immediately. It will be added to queue and all the functions in queue will be executed on `gic.Init` call in order
+
 (see: https://github.com/sabahtalateh/gic/blob/main/tests/example/internal/greeter.go)
 ```go
 package internal
