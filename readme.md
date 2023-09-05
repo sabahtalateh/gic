@@ -36,7 +36,7 @@ implementing `stage`. [Read more](https://github.com/sabahtalateh/gic#stages)
 ### Add
 
 To add component use `gic.Add` from `init` function. If called not from `init` it will panic. Checked
-with `runtime.Caller`.
+with `runtime.Caller`
 
 Component initialization function passed with `gic.WithInit` or `gic.WithInitE` if there may be an error during the initialization
 
