@@ -29,14 +29,29 @@ type container struct {
 
 	logger *zap.SugaredLogger
 
-	initFns  []func(*container) error                 // keeps init functions
-	stages   map[string]stage                         // keeps registered stages
-	stageFns map[string][]func(context.Context) error // keeps stages function grouped by stage id
+	initFns   []func(*container) error                 // init functions in add order
+	initsDone map[int]struct{}                         // indexes of executed initFns
+	initLocs  map[reflect.Type]map[string]initLocation // initFns indices by component type and id
+
+	stages   map[string]stage                         // registered stages
+	stageFns map[string][]func(context.Context) error // stages function grouped by stage id
 
 	components map[reflect.Type]map[string]*component
 
 	dump *dump
 }
+
+var globC = &container{
+	initsDone:  map[int]struct{}{},
+	initLocs:   map[reflect.Type]map[string]initLocation{},
+	stages:     map[string]stage{},
+	stageFns:   map[string][]func(context.Context) error{},
+	components: map[reflect.Type]map[string]*component{},
+}
+
+// container has 2 predefined stages.
+var start = RegisterStage(WithID(ID("Start")))
+var stop = RegisterStage(WithID(ID("Stop")))
 
 type GlobalContainerOption interface {
 	applyGlobalContainerOption(*container)
@@ -56,16 +71,6 @@ func ConfigureGlobalContainer(opts ...GlobalContainerOption) error {
 
 	return nil
 }
-
-var globC = &container{
-	stages:     map[string]stage{},
-	stageFns:   map[string][]func(context.Context) error{},
-	components: map[reflect.Type]map[string]*component{},
-}
-
-// container has 2 predefined stages.
-var start = RegisterStage(WithID(ID("Start")))
-var stop = RegisterStage(WithID(ID("Stop")))
 
 // WithStart adds component start function
 // Added function will be executed on Start call.

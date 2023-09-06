@@ -22,3 +22,11 @@ func WithID(id id) withID {
 func ID(value string) id {
 	return id{v: value}
 }
+
+func strID(id string) string {
+	out := ""
+	if id != "" {
+		out = fmt.Sprintf("[id=%s]", id)
+	}
+	return out
+}

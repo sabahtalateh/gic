@@ -12,7 +12,18 @@ type Component struct{ prop string }
 
 var SomeID = gic.ID("SomeID")
 
+var err error
+
 func init() {
+	defer func() {
+		if r := recover(); r != nil {
+			switch e := r.(type) {
+			case error:
+				err = e
+			}
+		}
+	}()
+
 	gic.Add[*Component](
 		gic.WithID(SomeID),
 		gic.WithInit(func() *Component { return &Component{prop: "v1"} }),
@@ -25,6 +36,5 @@ func init() {
 }
 
 func TestErrorOnDuplicatedID(t *testing.T) {
-	err := gic.Init()
-	require.ErrorIs(t, err, gic.ErrComponentAdded)
+	require.ErrorIs(t, err, gic.ErrComponentIDInUse)
 }

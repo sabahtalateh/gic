@@ -1,6 +1,6 @@
 # GIC - Global Init Container
 
-- `(G)` It stored in a [global variable](https://github.com/sabahtalateh/gic/blob/main/container.go#L60) `globC` (because - who needs more than one?)
+- `(G)` It stored in a [global variable](https://github.com/sabahtalateh/gic/blob/main/container.go#L60) `globC` (because - who needs more than one container?)
 - `(I)` Components added in `init` function (so can not be added dynamically. because - who needs it?)
 - `(C)` ontainer
 
@@ -171,8 +171,7 @@ func main() {
 
 ## Stages
 
-Container has two predefined `stages`: `Start` and `Stop`. It can be useful for opening/closing db client sockets,
-starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart` and `gic.WithStop`. Pass function accepting `context.Context` and `component`. Context can be set from outside to stop `stage` execution by timeout
+Container has two predefined `stages`: `Start` and `Stop`. It can be useful for opening/closing db client sockets, starting/stopping event consumers and workers and so on. To implement `Start` or `Stop` for some component use `gic.WithStart`and `gic.WithStop`. Pass function accepting `context.Context` and `component`. Context can be set from outside to stop `stage` execution by timeout
 
 Custom `stages` also can be registered
 

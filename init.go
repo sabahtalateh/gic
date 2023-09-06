@@ -9,10 +9,14 @@ func Init() error {
 		return ErrInitialized
 	}
 
-	for _, fn := range globC.initFns {
+	for i, fn := range globC.initFns {
+		if _, ok := globC.initsDone[i]; ok {
+			continue
+		}
 		if err := fn(globC); err != nil {
 			return err
 		}
+		globC.initsDone[i] = struct{}{}
 	}
 
 	if globC.dump != nil {

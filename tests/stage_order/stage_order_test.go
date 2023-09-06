@@ -56,10 +56,10 @@ func TestStageOrder(t *testing.T) {
 
 	_ = gic.Init()
 	err = gic.RunStage(context.Background(), direct)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	err = gic.RunStage(context.Background(), reverse)
-	require.Nil(t, err)
+	require.NoError(t, err)
 
 	require.Equal(t, []int{1, 2}, directOut)
 	require.Equal(t, []int{2, 1}, reverseOut)

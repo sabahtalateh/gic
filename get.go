@@ -4,10 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
-	"sort"
-	"strings"
-
-	"golang.org/x/exp/maps"
 )
 
 type getOpts struct{ id id }
@@ -39,65 +35,36 @@ func get[T any](c *container, opts getOpts) (t T, err error) {
 		return t, err
 	}
 
-	// T found
-	if comps, ok := c.components[lookFor]; ok {
-		comp, err := compByID(comps, lookFor, opts.id)
-		if err != nil {
+	initLoc, err := c.initLocation(lookFor, opts.id.v)
+	if err != nil {
+		return t, err
+	}
+
+	// If init function for component exists but was not executed yet then execute it
+	if _, done := c.initsDone[initLoc.fn]; !done {
+		if len(c.initFns)-1 < initLoc.fn {
+			return t, fmt.Errorf("impossible")
+		}
+		if err = c.initFns[initLoc.fn](c); err != nil {
 			return t, err
 		}
-		return comp.c.(T), nil
+		c.initsDone[initLoc.fn] = struct{}{}
 	}
 
-	// Try to find type assignable to T
-	for typ, comps := range c.components {
-		if !typ.AssignableTo(lookFor) {
-			continue
-		}
-
-		comp, err := compByID(comps, typ, opts.id)
-		if err != nil {
-			return t, err
-		}
-
-		return reflect.ValueOf(comp.c).Convert(lookFor).Interface().(T), nil
-	}
-
-	// T not found. Try hint
-	if err = hint(c.components, lookFor, makeCaller()); err != nil {
-		return t, errors.Join(ErrNotFound, err)
-	}
-
-	// T Not found
-	return t, errors.Join(ErrNotFound, fmt.Errorf("%s[id=%s] not found %s", lookFor, opts.id, makeCaller()))
-}
-
-func compByID(comps map[string]*component, t reflect.Type, id id) (*component, error) {
-	comp, ok := comps[id.v]
+	comps, ok := c.components[lookFor]
 	if !ok {
-		var (
-			foundMsg string
-			found    = compsForErr(comps, t)
-		)
-		if len(found) > 0 {
-			foundMsg = "\nexisting components:\n" + strings.Join(found, "\n")
-		}
-		return nil, errors.Join(ErrNotFound, fmt.Errorf("%s[id=%s] not found\n%s%s", t, id, makeCaller(), foundMsg))
-	}
-	return comp, nil
-}
-
-func compsForErr(comps map[string]*component, t reflect.Type) []string {
-	// sort keys by caller
-	keys := maps.Keys(comps)
-	sort.Slice(keys, func(i, j int) bool { return comps[keys[i]].caller.String() < comps[keys[j]].caller.String() })
-
-	found := make([]string, len(keys))
-	for i, k := range keys {
-		v := comps[k]
-		found[i] = fmt.Sprintf("%s[id=%s] at %s", t, k, v.caller)
+		return t, errNotFound(lookFor, opts.id.v)
 	}
 
-	return found
+	comp, ok := comps[opts.id.v]
+	if !ok {
+		return t, errNotFound(lookFor, opts.id.v)
+	}
+
+	if c.dump != nil && !c.initialized {
+		c.dump.got = append(c.dump.got, comp)
+	}
+	return comp.c.(T), nil
 }
 
 func checkGetType(t reflect.Type) error {

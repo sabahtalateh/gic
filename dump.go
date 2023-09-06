@@ -125,7 +125,7 @@ func dumpComponent(c *container, comp *component) {
 	rt := reflect.TypeOf(comp.c)
 
 	cJSON := &compJSON{
-		Order: c.dump.initCount,
+		Order: c.dump.initCount + 1,
 		Type:  rt.String(),
 		ID:    comp.id.v,
 	}
@@ -184,7 +184,7 @@ func dumpFile(c *container, path string) {
 	c.dump.data.Files[path] = strings.Split(string(bb), "\n")
 }
 
-//nolint
+// nolint
 func writeDump(c *container) {
 	if c.dump == nil {
 		return

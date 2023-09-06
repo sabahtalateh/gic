@@ -17,6 +17,10 @@ func init() {
 }
 
 func Run() []string {
+	_ = gic.ConfigureGlobalContainer(
+		gic.WithDump(gic.WithDumpDir("./dump")),
+	)
+
 	if err := gic.Init(); err != nil {
 		panic(err)
 	}

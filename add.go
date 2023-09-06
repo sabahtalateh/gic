@@ -106,12 +106,10 @@ func add[T any](c *container, ao addOptions[T]) error {
 		call = makeCaller()
 	)
 
-	c.mu.Lock()
+	// no need to be locked as can be used only from init
 	if c.initialized {
-		c.mu.Unlock()
 		return ErrInitialized
 	}
-	c.mu.Unlock()
 
 	if call.found {
 		if err = checkCallFromInit(call); err != nil {
@@ -134,17 +132,19 @@ func add[T any](c *container, ao addOptions[T]) error {
 		return ErrBothInit
 	}
 
-	c.initFns = append(c.initFns, func(*container) error { return initFn[T](c, rt, ao, call) })
+	if err = checkAdd[T](c.initLocs, rt, ao.id); err != nil {
+		return err
+	}
+
+	fn := func(*container) error { return initFn[T](c, rt, ao, call) }
+	c.initFns = append(c.initFns, fn)
+	c.setInitLocation(rt, ao.id.v, len(c.initFns)-1, call)
 
 	return nil
 }
 
-func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall caller) error {
-	if comps, ok := c.components[typ]; ok {
-		if err := checkAdd[T](comps, ao.id); err != nil {
-			return err
-		}
-	} else {
+func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], caller caller) error {
+	if _, ok := c.components[typ]; !ok {
 		c.components[typ] = map[string]*component{}
 	}
 
@@ -169,14 +169,10 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 		}
 	}
 
-	comp := &component{id: ao.id, caller: addCall, c: t}
+	comp := &component{id: ao.id, caller: caller, c: t}
 	c.components[typ][ao.id.v] = comp
 
-	logID := ao.id.v
-	if logID == "" {
-		logID = "(No ID)"
-	}
-	c.LogInfof("%s[id=%s] initialized", typ, logID)
+	c.LogInfof("%s%s initialized", typ, strID(ao.id.v))
 
 	dumpComponent(c, comp)
 
@@ -187,7 +183,7 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 			return errors.Join(ErrStageNotRegistered, fmt.Errorf("%s", stgID))
 		}
 		c.stageFns[stgID.v] = append(c.stageFns[stgID.v], func(ctx context.Context) error { return f(ctx, t) })
-		c.LogInfof("%s[id=%s] implementing stage: %s", typ, logID, stgID)
+		c.LogInfof("%s%s implementing stage: %s", typ, strID, strID(ao.id.v))
 
 		dumpStageImpl(c, &stg, comp)
 	}
@@ -195,15 +191,25 @@ func initFn[T any](c *container, typ reflect.Type, ao addOptions[T], addCall cal
 	return nil
 }
 
-func checkAdd[T any](comps map[string]*component, id id) error {
+func checkAdd[T any](locs map[reflect.Type]map[string]initLocation, typ reflect.Type, id id) error {
+	ids, ok := locs[typ]
+	if !ok {
+		return nil
+	}
+
 	var t T
 
 	// FORBIDDEN to have same id for same type
-	if comp, ok := comps[id.v]; ok {
+	if comp, ok := ids[id.v]; ok {
+		idStr := " "
+		if id.v != "" {
+			idStr = fmt.Sprintf(" with id %s ", id.v)
+		}
+
 		return errors.Join(
-			ErrComponentAdded,
+			ErrComponentIDInUse,
 			fmt.Errorf(
-				"component of type %s with id %s already added\n%s\n%s", reflect.TypeOf(t), id.v, comp.caller, makeCaller(),
+				"component of type %s%salready added\n%s\n%s", reflect.TypeOf(t), idStr, comp.caller, makeCaller(),
 			),
 		)
 	}
@@ -213,10 +219,7 @@ func checkAdd[T any](comps map[string]*component, id id) error {
 
 func checkAddType(t reflect.Type) error {
 	if t.Kind() == reflect.Interface {
-		return errors.Join(
-			ErrInterface,
-			fmt.Errorf("attempting to add %s interface\n%s", t, makeCaller()),
-		)
+		return errors.Join(ErrInterface, fmt.Errorf("attempting to add %s interface\n%s", t, makeCaller()))
 	}
 
 	return nil
