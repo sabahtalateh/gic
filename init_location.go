@@ -3,10 +3,11 @@ package gic
 import (
 	"errors"
 	"fmt"
-	"golang.org/x/exp/maps"
 	"reflect"
 	"sort"
 	"strings"
+
+	"golang.org/x/exp/maps"
 )
 
 type initLocation struct {
@@ -56,5 +57,5 @@ func initLocsForErr(locs map[string]initLocation, t reflect.Type) []string {
 		found[i] = fmt.Sprintf("%s%s at %s", t, strID(k), v.caller)
 	}
 
-	return nil
+	return found
 }
