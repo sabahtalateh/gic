@@ -4,6 +4,9 @@
 - `(I)` Components added in `init` function (so can not be added dynamically. because - who needs it?)
 - `(C)` ontainer
 
+## TODO
+Dump like tracing
+
 ## Example
 
 Example project with Postgres DB can be found here https://github.com/sabahtalateh/gicex
